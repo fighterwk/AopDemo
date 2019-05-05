@@ -42,9 +42,19 @@ variants.all { variant ->
                          "-classpath", javaCompile.classpath.asPath,
                          "-bootclasspath", project.android.bootClasspath.join(File.pathSeparator)]
         log.debug "ajc args: " + Arrays.toString(args)
+// kotlin 使用aspectj 配置
+        String[] kotlinArgs = ["-showWeaveInfo",
+                               "-1.8",
+                               "-inpath", project.buildDir.path + "/tmp/kotlin-classes/" + fullName,
+                               "-aspectpath", javaCompile.classpath.asPath,
+                               "-d", project.buildDir.path + "/tmp/kotlin-classes/" + fullName,
+                               "-classpath", javaCompile.classpath.asPath,
+                               "-bootclasspath", project.android.bootClasspath.join(
+                File.pathSeparator)]
 
-        def handler = new MessageHandler(true);
-        new Main().run(args, handler);
+        def handler = new MessageHandler(true)
+        new Main().run(args, handler)
+        new Main().run(kotlinArgs, handler)
         for (IMessage message : handler.getMessages(null, true)) {
             switch (message.getKind()) {
                 case IMessage.ABORT:
