@@ -1,6 +1,7 @@
 package com.kyle.aopdemo.aop
 
 import android.view.View
+import com.kyle.aopdemo.annotation.CheckLogin
 import com.kyle.aopdemo.annotation.Intercept
 import org.aspectj.lang.JoinPoint
 import org.aspectj.lang.ProceedingJoinPoint
@@ -18,13 +19,17 @@ import org.aspectj.lang.annotation.Pointcut
 @Aspect
 class MyIntercept {
 
+    /**
+     * 侵入式
+     */
     @Pointcut("execution(@com.kyle.aopdemo.annotation.Intercept * *(..))" +
             " && @annotation(m)")
     fun interceptPoint(m: Intercept) {
     }
 
-    @Pointcut("execution(* android.view.View.OnClickListener+.onClick(..))" +
-            " && args(v)")
+//    @Pointcut("execution(* android.view.View.OnClickListener+.onClick(..))" +
+//            " && args(v)")
+    @Pointcut("execution(* onClick(..)) && target(android.view.View.OnClickListener) && args(v)")
     fun interceptOnClick(v: View) {
 
     }
